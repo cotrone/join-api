@@ -57,6 +57,9 @@ instance FromJSON JoinResponse where
       <*> (o .: "kind")
       <*> (o .: "etag")
 
+-- | Send an SMS from the given device.
+-- If the device doesn't allow join to send SMS,
+-- there will be an error in the response
 sendSMS :: APIKey -> DeviceId -> SMS -> IO JoinResponse
 sendSMS (APIKey key) (DeviceId i) (SMS number msg) = do
   resp <- asJSON =<< (get $ exportURL smsUrl)
@@ -70,6 +73,7 @@ sendSMS (APIKey key) (DeviceId i) (SMS number msg) = do
       , ("smstext", msg)
       ]
 
+-- | Send a push notification to a given device
 sendPush :: APIKey -> DeviceId -> Text -> IO JoinResponse
 sendPush (APIKey key) (DeviceId i) msg = do
   resp <- asJSON =<< (get $ exportURL smsUrl)
